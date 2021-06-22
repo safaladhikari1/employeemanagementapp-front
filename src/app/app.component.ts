@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { Employee } from './employee';
 import { EmployeeService } from './employee.service';
@@ -9,7 +10,7 @@ import { EmployeeService } from './employee.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
-  public employees: Employee[];
+  public employees: Employee[] = [];
 
   constructor(private employeeService: EmployeeService) { }
 
