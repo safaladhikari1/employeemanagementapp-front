@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Employee } from './employee';
 import { EmployeeService } from './employee.service';
 
@@ -10,7 +11,8 @@ import { EmployeeService } from './employee.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
-  public employees: Employee[];
+  public employees: Employee[] = [];
+  public editEmployee: Employee;
 
   constructor(private employeeService: EmployeeService) { }
 
@@ -29,6 +31,33 @@ export class AppComponent implements OnInit{
     );
   }
 
+  public onAddEmployee(addForm: NgForm): void {
+    document.getElementById('add-employee-form')?.click();
+    this.employeeService.addEmployee(addForm.value).subscribe(
+        (response: Employee) => {
+          console.log(response);
+          this.getEmployees();
+          addForm.reset();
+        },
+        (error: HttpErrorResponse) => {
+          alert(error.message);
+          addForm.reset();
+        }
+    );  
+  }
+
+  public onUpdateEmployee(employee: Employee): void {
+    this.employeeService.updateEmployees(employee).subscribe(
+        (response: Employee) => {
+          console.log(response);
+          this.getEmployees();
+        },
+        (error: HttpErrorResponse) => {
+          alert(error.message);
+        }
+    );  
+  }
+
   public onOpenModal(employee: Employee, mode: string): void {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
@@ -40,6 +69,7 @@ export class AppComponent implements OnInit{
     }
 
     if (mode === 'edit') {
+      this.editEmployee = employee;
       button.setAttribute('data-target', '#updateEmployeeModal');
     }
 
